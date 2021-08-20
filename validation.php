@@ -1,39 +1,22 @@
 <?php
+require_once("db.php");
 
-session_start();
-
-$con = mysqli_connect('localhost','root');
-if($con){
-	echo" connection successful";
-}else{
-	echo " no connection"; 
-}
-
-mysqli_select_db($con, 'session');
-
-$email = $_POST['email'];
-$pass = $_POST['password'];
-
-
-$q = " select * from signin where email = '$email' && password = '$pass' ";
-
+// Query to validate login
+$q = "SELECT * from user WHERE `email` = '".mysqli_real_escape_string($con, strtolower($_POST['email']))."' AND `password` = '".mysqli_real_escape_string($con, $_POST['password'])."'";
+// Get result
 $result = mysqli_query($con, $q);
-
+// Check if match
 $num = mysqli_num_rows($result);
 
-
-if($num == 1){
-	
-	$row = mysqli_fetch_array($result);
-	$_SESSION['user'] = $row['name'];
-	header('location:home.php');
-
-
-}else{
-
-	header('location:index.html');
+if ($num == 1) {
+	// Grab user
+	$row = mysqli_fetch_assoc($result);
+	// Set Session
+	$_SESSION['user'] = $row;
+	// Redirect to stones.php
+	header('Location: stones.php');
+} else {
+	session_destroy(); // Empty $_SESSION
+	// Redirect to login
+	header('Location: index.php');
 }
-
-
-
-?>

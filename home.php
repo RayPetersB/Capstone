@@ -1,12 +1,8 @@
 <?php
-
-session_start();
-if(!isset($_SESSION['user'])){
-header('location:index.html');
+if(!isset($_SESSION['user'])){ // Not logged in, take to login page
+	header('location: index.php');
 }
-
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
